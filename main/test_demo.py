@@ -7,6 +7,11 @@ URL = "https://lostore.vn/"
 # listOfMainProduct = ["MÀU VẼ", "GIẤY VẼ", "BÚT VẼ, CỌ VẼ", "PHÁC THẢO", "THỦ CÔNG (DIY)", "DỤNG CỤ BỔ TRỢ", "VĂN PHÒNG PHẨM", "TÚI VẢI CANVAS"]
 listOfMainProduct = ["GIẤY VẼ"]
 
+#Xpath of element
+mainMenuElement = "//ul[@class='list-menu vertical-menu-list']/.//a[@title='{}']"
+categoryOfProductElement = "//ul[@class='list-menu vertical-menu-list']/.//a[@title='{}']/..//li[@class='tp_menu_item child-item']"
+itemOfCategoryElement = "//div[@class='product-list']/..//li[@class='item_product ivt']"
+
 
 with sync_playwright() as p:
     
@@ -22,27 +27,27 @@ with sync_playwright() as p:
     for value in listOfMainProduct:
         page.wait_for_timeout(2000)
         page.evaluate("window.scrollTo(0, 0)")
-        mainProductItem = page.locator(f"//ul[@class='list-menu vertical-menu-list']/.//a[@title='{value}']")
+        mainProductItem = page.locator(mainMenuElement.format(value))
         print("[ MAIN PRODUCT: " + mainProductItem.inner_text().upper() + "]")
         mainProductItem.hover()
 
         # click each category of main menu
-        elementOfMainMenu = (f"//ul[@class='list-menu vertical-menu-list']/.//a[@title='{value}']/..//li[@class='tp_menu_item child-item']")
-        countSelector = page.locator(elementOfMainMenu).count()
-        for indexCategory in range(0, countSelector):
+        categoryOfProduct = (categoryOfProductElement.format(value))
+        countSelectorOfCategory = page.locator(categoryOfProduct).count()
+        for indexCategory in range(0, countSelectorOfCategory):
             page.wait_for_timeout(2000)
-            selectorToBeClick = page.wait_for_selector(elementOfMainMenu+(f"[{indexCategory + 1}]"))
+            selectorToBeClick = page.wait_for_selector(categoryOfProduct+(f"[{indexCategory + 1}]"))
             selectorToBeClick.focus()
             print("\nCLICK ON Category: " + selectorToBeClick.inner_text())
             selectorToBeClick.click()
             page.wait_for_timeout(1000)
 
             # click each item of category
-            elementOfItemCategory = "//div[@class='product-list']/..//li[@class='item_product ivt']"
-            countItem = page.locator(elementOfItemCategory).count()
+            # elementOfItemCategory = "//div[@class='product-list']/..//li[@class='item_product ivt']"
+            countItem = page.locator(itemOfCategoryElement).count()
             for indexItem in range(0, countItem):
                 page.wait_for_timeout(2000)
-                itemToBeClick = page.wait_for_selector(elementOfItemCategory+(f"[{indexItem + 1}]"))
+                itemToBeClick = page.wait_for_selector(itemOfCategoryElement+(f"[{indexItem + 1}]"))
                 itemToBeClick.focus()
                 print("\nclick on item: " + itemToBeClick.inner_text())
                 page.wait_for_timeout(1000)
