@@ -43,7 +43,6 @@ with sync_playwright() as p:
             page.wait_for_timeout(1000)
 
             # click each item of category
-            # elementOfItemCategory = "//div[@class='product-list']/..//li[@class='item_product ivt']"
             countItem = page.locator(itemOfCategoryElement).count()
             for indexItem in range(0, countItem):
                 page.wait_for_timeout(2000)
@@ -53,7 +52,7 @@ with sync_playwright() as p:
                 page.wait_for_timeout(1000)
                 itemToBeClick.click()
 
-                #Get element of table
+                #Get html of table
                 pageUrl = page.url
                 webpage = requests.get(pageUrl)  
                 soup = BeautifulSoup(webpage.content, "lxml") 
@@ -62,12 +61,20 @@ with sync_playwright() as p:
                 tableInfoData = soup.find("table", attrs={"class": 'ck-table-resized'})
                 nameOfProductByHtml = soup.find("h1", attrs={"class":"product-title tp_product_detail_name"})
                 nameOfProduct = nameOfProductByHtml.getText().strip()
+                nameOfAttribute = soup.find("p", attrs={"class":"type-attr"})
+                textOfTag = []
+                if nameOfAttribute:
+                    for aTag in nameOfAttribute.find_all('a'):
+                        textOfTag.append(aTag.text)
+                        print("Attribute of product: " + textOfTag)
+                else:
+                    print("no element found for attribute of product")
+
                 print("Table html:" + str(tableInfoData))
                 print("Name Of Product :" + nameOfProduct)
 
                 # Data to store content
                 data = []
-
                 data.append([nameOfProduct, tableInfoData])
                 dataFrame = pd.DataFrame(data, columns=["Name Of Product", "Table Info"])
 
@@ -77,11 +84,10 @@ with sync_playwright() as p:
                 except FileNotFoundError:
                     pass
 
-                # Save DataFrame
+                # Save DataFrame to file
                 dataFrame.to_excel("data.xlsx", index=False)
 
                 print("Data saved to excel file successfully!")
-
 
                 page.wait_for_timeout(2000)
                 page.go_back()
@@ -98,10 +104,9 @@ with sync_playwright() as p:
             
 
     
-        # Wait for navigation
+    # Wait for navigation
     page.wait_for_timeout(1000)
 
-    # Close the browser
     browser.close()
     print('Browser closed')
 
