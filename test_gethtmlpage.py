@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup  
 import requests 
 import pandas as pd 
+from unidecode import unidecode
   
 # URL to the scraped 
-URL = "https://lostore.vn/dao-doc-giay-mau-den-p38404347.html"
+URL = "https://lostore.vn/so-sketchbook-nabii-ima-160gsm-32-to-p23198717.html"
   
 # getting the contents of the website and parsing them 
 webpage = requests.get(URL)  
@@ -11,19 +12,21 @@ soup = BeautifulSoup(webpage.content, "lxml")
   
 # getting the h1 with id as firstHeading and printing it
 # tableInfoData = soup.find("table", attrs={"class": 'ck-table-resized'})
-# nameOfProductByHtml = soup.find("h1", attrs={"class":"product-title tp_product_detail_name"})
-nameOfAttribute = soup.find("p", attrs={"class":"type-attr"})
-textOfTag = []
-if nameOfAttribute:
-  for aTag in nameOfAttribute.find_all('a'):
-      textOfTag.append(aTag.text)
-      print(textOfTag)
-else:
-   print("no element found")
+nameOfProductByHtml = soup.find("h1", attrs={"class":"product-title tp_product_detail_name"})
+# nameOfAttribute = soup.find("p", attrs={"class":"type-attr"})
+# textOfTag = []
+# if nameOfAttribute:
+#   for aTag in nameOfAttribute.find_all('a'):
+#       textOfTag.append(aTag.text)
+#       print(textOfTag)
+# else:
+#    print("no element found")
     
-# nameOfProduct = nameOfProductByHtml.getText().strip()
+nameOfProduct = nameOfProductByHtml.getText().strip()
 # print("Table html:" + str(tableInfoData))
 # print("Name Of Product :" + nameOfProduct)
+aliasOfProduct = unidecode(nameOfProduct).replace(" - ","-").replace(" ", "-").replace("_","-")
+print(aliasOfProduct)
 
 
 
