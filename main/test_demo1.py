@@ -108,8 +108,6 @@ with sync_playwright() as p:
 
                 page.wait_for_timeout(2000)
                 page.go_back()
-                # page.wait_for_timeout(2000)
-                # page.evaluate("window.scrollTo(0, 0)")
 
             # Back to main menu
             logoElement = page.wait_for_selector("//div[@class='header-logo']")
@@ -127,18 +125,4 @@ with sync_playwright() as p:
     browser.close()
     print('Browser closed')
 
-# def selectToItemOfCategory(value):
-#     elementOfMainProduct = (f"//ul[@class='list-menu vertical-menu-list']/.//a[@title='{value}']/..//li[@class='tp_menu_item child-item']")
-#     countSelector = page.locator(elementOfMainProduct).count()
-#     for i in range(0, countSelector):
-#         page.wait_for_timeout(2000)
-#         selectorToBeClick = page.wait_for_selector(elementOfMainProduct+(f"[{i+1}]"))
-#         print("click on: " + selectorToBeClick.inner_text())
-#         selectorToBeClick.click()
-#         page.go_back()
-#         page.wait_for_timeout(2000)
-#         page.evaluate("window.scrollTo(0, 0)")
-#         # mainProductItem.wait_for(state="visible")
-#         page.wait_for_selector(f"//ul[@class='list-menu vertical-menu-list']/.//a[@title='{value}']")
-#         mainProductItem.hover()
  
