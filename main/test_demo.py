@@ -74,7 +74,7 @@ with sync_playwright() as p:
                 print("Name Of Product :" + nameOfProduct)
 
                 # Data to store content
-                data = [textOfTag]
+                data = []
                 data.append([nameOfProduct, tableInfoData])
                 dataFrame = pd.DataFrame(data, columns=["Name Of Product", "Table Info", "Thuoc Tinh"])
 
